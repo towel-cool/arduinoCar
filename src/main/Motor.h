@@ -4,8 +4,14 @@
 void setSpeed();
 void forward();
 void back();
-void left();
-void right();
+void brake();
+void leftForward();
+void rightForward();
+void leftTurn();
+void rightTurn();
+void leftBrake();
+void rightBrake();
+void leftBackwards();
+void rightBackwards();
 void swivelLeft();
 void swivelRight();
-void brake();
