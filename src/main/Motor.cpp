@@ -22,37 +22,49 @@ void setSpeed() {
 void brake() {
   leftBack.run(RELEASE);
   rightBack.run(RELEASE);
-  motor3.run(RELEASE);
-  motor4.run(RELEASE);
+  leftFront.run(RELEASE);
+  rightFront.run(RELEASE);
   setSpeed();
 }
 void forward() {
-  motor1.run(FORWARD);
-  motor2.run(FORWARD);
-  motor3.run(FORWARD);
-  motor4.run(FORWARD);
+  leftFront.run(FORWARD);
+  leftBack.run(FORWARD);
+  rightFront.run(FORWARD);
+  rightBack.run(FORWARD);
 }
 void backward() {
-  motor1.run(BACKWARD);
-  motor2.run(BACKWARD);
-  motor3.run(BACKWARD);
-  motor4.run(BACKWARD);
+  leftFront.run(BACKWARD);
+  leftBack.run(BACKWARD);
+  rightFront.run(BACKWARD);
+  rightBack.run(BACKWARD);
 }
 
 // LEFT RIGHT SETTERS
 void leftForward() {
-  motor1.run(FORWARD);
-  motor4.run(FORWARD);
+  leftFront.run(FORWARD);
+  leftBack.run(FORWARD);
 }
 void rightForward() {
-  motor2.run(FORWARD);
-  motor3.run(FORWARD);
+  rightFront.run(FORWARD);
+  rightBack.run(FORWARD);
 }
 void leftBrake() {
+  leftFront.run(RELEASE);
+  leftBack.run(RELEASE);
 }
-void rightBrake() {}
-void leftBackwards() {}
-void rightBackwards() {}
+void rightBrake() {
+  rightFront.run(RELEASE);
+  rightBack.run(RELEASE);
+
+}
+void leftBackward() {
+  leftFront.run(BACKWARD);
+  leftBack.run(BACKWARD);
+}
+void rightBackward() {
+  rightFront.run(BACKWARD);
+  rightBack.run(BACKWARD);
+}
 
 // COMPLEX
 void leftTurn() {
@@ -64,9 +76,32 @@ void rightTurn() {
   leftForward();
 }
 
+void swivelStop(){
+  // where to set how much a car will swivel
+  delay(1000);
+  brake();
+}
 
-void swivelLeft() {}
-void swivelRight() {}
+void swivelLeft() {
+  leftBackward();
+  rightForward();
+  
+}
+void swivelRight() {
+  leftForward();
+  rightBackward();
+}
+
+void swivelLeftAngle() {
+  swivelLeft();
+  swivelStop();
+  
+}
+void swivelRightAngle() {
+  swivelRight();
+  swivelStop();
+}
+
 
 int speed(int percent) {
   return map(percent, 0, 200, 0, 255);
