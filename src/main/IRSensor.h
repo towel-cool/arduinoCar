@@ -1,0 +1,5 @@
+void setupIR();
+int* checkGround();
+
+
+
