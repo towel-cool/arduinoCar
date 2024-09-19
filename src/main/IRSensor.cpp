@@ -11,6 +11,7 @@ int isObsBL = HIGH;
 int pinBR = 30;
 int isObsBR = HIGH;
 int pinBM = 32;
+int isObsBM = HIGH;
 
 int res[6] = {0,0,0,0,0,0};
 
@@ -33,7 +34,7 @@ int* checkGround() {
     {
         res[0] = 1;
     }
-    isObsFR = digitalRead(pinFL);
+    isObsFR = digitalRead(pinFR);
     if (isObsFR == LOW)
     {
         res[1] = 0;
@@ -42,7 +43,7 @@ int* checkGround() {
     {
         res[1] = 1;
     }
-    isObsFM = digitalRead(pinFL);
+    isObsFM = digitalRead(pinFM);
     if (isObsFM == LOW)
     {
         res[2] = 0;
@@ -51,7 +52,7 @@ int* checkGround() {
     {
         res[2] = 1;
     }   
-    isObsBL = digitalRead(pinFL);
+    isObsBL = digitalRead(pinBL);
     if (isObsBL == LOW)
     {
         res[3] = 0;
@@ -60,7 +61,7 @@ int* checkGround() {
     {
         res[3] = 1;
     }  
-    isObsBL = digitalRead(pinFL);
+    isObsBR = digitalRead(pinBR);
     if (isObsBL == LOW)
     {
         res[4] = 0;
@@ -69,7 +70,7 @@ int* checkGround() {
     {
         res[4] = 1;
     } 
-    isObsBL = digitalRead(pinFL);
+    isObsBM = digitalRead(pinBM);
     if (isObsBL == LOW)
     {
         res[5] = 0;
