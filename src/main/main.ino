@@ -9,9 +9,10 @@ void setup(){
 
 void loop(){
   forward();
-  checkGround();
-  //int* sensorArray = checkGround();
-  //for (int i = 0; i < 6; i++)
-  //  Serial.print(sensorArray[i]);
+  int* sensorArray = checkGround();
+  for (int i = 0; i < 6; i++)
+    Serial.print(sensorArray[i]);
+  Serial.println();
+  delay(200);
 }
 
