@@ -15,3 +15,5 @@ void leftBackward();
 void rightBackward();
 void swivelLeft();
 void swivelRight();
+void swivelRightAngle(int x);
+void swivelLeftAngle(int x);

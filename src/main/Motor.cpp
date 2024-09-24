@@ -6,17 +6,27 @@ AF_DCMotor motor2(2);
 AF_DCMotor motor3(3);
 AF_DCMotor motor4(4);
 
-AF_DCMotor& leftFront = motor4;
-AF_DCMotor& leftBack = motor1;
-AF_DCMotor& rightFront = motor3;
-AF_DCMotor& rightBack = motor2;
+AF_DCMotor& leftFront = motor2;
+AF_DCMotor& leftBack = motor3;
+AF_DCMotor& rightFront = motor1;
+AF_DCMotor& rightBack = motor4;
 
 void setSpeed() {
-  int speed = 35;
+  int speed = 100;
   leftFront.setSpeed(speed);
   leftBack.setSpeed(speed);
   rightFront.setSpeed(speed);
   rightBack.setSpeed(speed);
+}
+
+void setLeftSpeed(int x){
+  leftFront.setSpeed(x);
+  leftBack.setSpeed(x);
+}
+
+void setRightSpeed(int x){
+  rightFront.setSpeed(x);
+  rightBack.setSpeed(x);
 }
 
 void brake() {
@@ -92,14 +102,20 @@ void swivelRight() {
   rightBackward();
 }
 
-void swivelLeftAngle() {
+void swivelLeftAngle(int x) {
+  setLeftSpeed(200);
+  setRightSpeed(200);
   swivelLeft();
-  swivelStop();
+  delay(x);
+  setSpeed();
   
 }
-void swivelRightAngle() {
+void swivelRightAngle(int x) {
+  setLeftSpeed(200);
+  setRightSpeed(200);
   swivelRight();
-  swivelStop();
+  delay(x);
+  setSpeed();
 }
 
 
