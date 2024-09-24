@@ -12,7 +12,7 @@ AF_DCMotor& rightFront = motor3;
 AF_DCMotor& rightBack = motor2;
 
 void setSpeed() {
-  int speed = 200;
+  int speed = 35;
   leftFront.setSpeed(speed);
   leftBack.setSpeed(speed);
   rightFront.setSpeed(speed);
