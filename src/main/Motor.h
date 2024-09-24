@@ -3,7 +3,7 @@
 
 void setSpeed();
 void forward();
-void back();
+void backward();
 void brake();
 void leftForward();
 void rightForward();
