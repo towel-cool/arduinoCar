@@ -1,16 +1,16 @@
 #include <Arduino.h>
 
-int pinFL = 22;
+int pinFL = 33;
 int isObsFL = HIGH;
-int pinFR = 24;
+int pinFR = 41;
 int isObsFR = HIGH;
-int pinFM = 26;
+int pinFM = 37;
 int isObsFM = HIGH;
-int pinBL = 28;
+int pinBL = 52;
 int isObsBL = HIGH;
-int pinBR = 30;
+int pinBR = 45;
 int isObsBR = HIGH;
-int pinBM = 32;
+int pinBM = 48;
 int isObsBM = HIGH;
 
 int res[6] = {0,0,0,0,0,0};
@@ -34,24 +34,24 @@ int* checkGround() {
     {
         res[0] = 1;
     }
-    isObsFR = digitalRead(pinFR);
-    if (isObsFR == LOW)
+    isObsFM = digitalRead(pinFM);
+    if (isObsFM == LOW)
     {
         res[1] = 0;
     }
     else
     {
         res[1] = 1;
-    }
-    isObsFM = digitalRead(pinFM);
-    if (isObsFM == LOW)
+    }  
+    isObsFR = digitalRead(pinFR);
+    if (isObsFR == LOW)
     {
         res[2] = 0;
     }
     else
     {
         res[2] = 1;
-    }   
+    } 
     isObsBL = digitalRead(pinBL);
     if (isObsBL == LOW)
     {
@@ -61,23 +61,24 @@ int* checkGround() {
     {
         res[3] = 1;
     }  
-    isObsBR = digitalRead(pinBR);
-    if (isObsBL == LOW)
+    isObsBM = digitalRead(pinBM);
+    if (isObsBM == LOW)
     {
         res[4] = 0;
     }
     else
     {
         res[4] = 1;
-    } 
-    isObsBM = digitalRead(pinBM);
-    if (isObsBL == LOW)
+    }
+    isObsBR = digitalRead(pinBR);
+    if (isObsBR == LOW)
     {
         res[5] = 0;
     }
     else
     {
         res[5] = 1;
-    }
+    } 
+
     return res;
 }
