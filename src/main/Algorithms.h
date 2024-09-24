@@ -1,0 +1,2 @@
+void checkIR();
+void move();

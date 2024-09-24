@@ -11,8 +11,9 @@ AF_DCMotor& leftBack = motor3;
 AF_DCMotor& rightFront = motor1;
 AF_DCMotor& rightBack = motor4;
 
-void setSpeed() {
-  int speed = 100;
+const int DEFAULT_SPEED = 100
+
+void setSpeed(int speed = DEFAULT_SPEED) {
   leftFront.setSpeed(speed);
   leftBack.setSpeed(speed);
   rightFront.setSpeed(speed);
@@ -36,13 +37,15 @@ void brake() {
   rightFront.run(RELEASE);
   setSpeed();
 }
-void forward() {
+void forward(int speed = DEFAULT_SPEED) {
+  setSpeed(speed);
   leftFront.run(FORWARD);
   leftBack.run(FORWARD);
   rightFront.run(FORWARD);
   rightBack.run(FORWARD);
 }
-void backward() {
+void backward(int speed = DEFAULT_SPEED) {
+  setSpeed(speed);
   leftFront.run(BACKWARD);
   leftBack.run(BACKWARD);
   rightFront.run(BACKWARD);
@@ -75,7 +78,6 @@ void rightBackward() {
   rightFront.run(BACKWARD);
   rightBack.run(BACKWARD);
 }
-
 // COMPLEX
 void leftTurn() {
   leftBrake();
@@ -85,14 +87,14 @@ void rightTurn() {
   rightBrake();
   leftForward();
 }
-
 void swivelStop(){
   // where to set how much a car will swivel
   delay(1000);
   brake();
 }
-
 void swivelLeft() {
+  setLeftSpeed(200);
+  setRightSpeed(200);
   leftBackward();
   rightForward();
   
@@ -103,8 +105,6 @@ void swivelRight() {
 }
 
 void swivelLeftAngle(int x) {
-  setLeftSpeed(200);
-  setRightSpeed(200);
   swivelLeft();
   delay(x);
   setSpeed();

@@ -1,5 +1,6 @@
 #include "Motor.h"
 #include "IRSensor.h"
+#include "Algorithms.h"
 
 const int buttonPin = 22;
 int buttonState = 0;
@@ -102,9 +103,9 @@ void moveAlgo() {
 
 void loop(){
   startControl();
-  buttonState = digitalRead(buttonPin);
-
   if (isOn) {
+    check();
+    move();
     moveAlgo();
   }
   else 
