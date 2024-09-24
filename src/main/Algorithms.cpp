@@ -10,7 +10,9 @@ int* sensorArray;
 int[] lastIR;
 
 void move(){
-  
+  // set certain numbers to pick between based on availableFunctions array
+  // randomly pick
+  // based
 }
 
 void checkIR(){
@@ -18,7 +20,7 @@ void checkIR(){
   int* sensorArray = checkGround();
 
   if (sensorArray == lastIR){
-    //
+    //if nothings changed do same
     availableFunctions = [false, false, false, false];
     availableFunctions[previous] = true;
   }
