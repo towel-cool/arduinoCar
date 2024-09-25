@@ -5,7 +5,7 @@
 #include "Stack.h"
 
 
-int previousFunction = -1;
+int previousFunctionIndex = -1;
 bool availableFunctions[4] = {true, true, true, true};
 //[forward, backwards, leftSwivel, rightSwivel]
 
@@ -34,16 +34,18 @@ void move(){
     Serial.print(possibleFunctions.get(i));
   Serial.println(" ");
 
-  int chosenIndex = (rand() % (possibleFunctions.length() - 1));
-  int chosenFunction = possibleFunctions.get(chosenIndex);
+  Serial.print("Possible Functions Length: ");
+  Serial.print(possibleFunctions.length());
+  int chosenIndex = (rand() % (possibleFunctions.length()));
+  int chosenFunctionIndex = possibleFunctions.get(chosenIndex);
 
   if (possibleFunctions.length() > 0) {
-      previousFunction = chosenFunction;
+      previousFunctionIndex = chosenFunctionIndex;
 
       Serial.print("Chosen Function: ");
-      Serial.println(chosenFunction);
+      Serial.println(chosenFunctionIndex);
 
-      switch(chosenFunction) {
+      switch(chosenFunctionIndex) {
         case 0: 
           forward();
           Serial.println("forward");
@@ -70,6 +72,7 @@ void move(){
 
 void checkIR(){
   Serial.print("Available: ");
+  Serial.println();
   for (int i = 0; i < 4; i++){
     Serial.print(availableFunctions[i]);
     Serial.print(" - > ");
@@ -90,7 +93,7 @@ void checkIR(){
     //if nothings changed do same
     for (int i = 0; i < 4; i++)
       availableFunctions[i] = false;
-    availableFunctions[previousFunction] = true;
+    availableFunctions[previousFunctionIndex] = true;
   }
   else{
     // if (sensorArray[0] == 0 && sensorArray[1] == 0 && sensorArray[2] == 0 && sensorArray[3] == 0 && sensorArray[4] == 0 && sensorArray[5] == 0) {
