@@ -1,7 +1,9 @@
 #include <AFMotor.h>
 #include <Arduino.h>
 
-void setSpeed();
+const int DEFAULT_SPEED = 125;
+
+void setSpeed(int speed = DEFAULT_SPEED);
 void forward();
 void backward();
 void brake();

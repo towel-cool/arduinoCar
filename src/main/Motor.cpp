@@ -6,12 +6,12 @@ AF_DCMotor motor2(2);
 AF_DCMotor motor3(3);
 AF_DCMotor motor4(4);
 
+const int DEFAULT_SPEED = 125;
+
 AF_DCMotor& leftFront = motor2;
 AF_DCMotor& leftBack = motor3;
 AF_DCMotor& rightFront = motor1;
 AF_DCMotor& rightBack = motor4;
-
-const int DEFAULT_SPEED = 100
 
 void setSpeed(int speed = DEFAULT_SPEED) {
   leftFront.setSpeed(speed);
@@ -37,15 +37,15 @@ void brake() {
   rightFront.run(RELEASE);
   setSpeed();
 }
-void forward(int speed = DEFAULT_SPEED) {
-  setSpeed(speed);
+void forward() {
+  setSpeed();
   leftFront.run(FORWARD);
   leftBack.run(FORWARD);
   rightFront.run(FORWARD);
   rightBack.run(FORWARD);
 }
-void backward(int speed = DEFAULT_SPEED) {
-  setSpeed(speed);
+void backward() {
+  setSpeed();
   leftFront.run(BACKWARD);
   leftBack.run(BACKWARD);
   rightFront.run(BACKWARD);
@@ -94,12 +94,14 @@ void swivelStop(){
 }
 void swivelLeft() {
   setLeftSpeed(200);
-  setRightSpeed(200);
+  setRightSpeed(180);
   leftBackward();
   rightForward();
   
 }
 void swivelRight() {
+  setLeftSpeed(180);
+  setRightSpeed(200);
   leftForward();
   rightBackward();
 }
