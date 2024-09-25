@@ -1,14 +1,14 @@
 #include <Arduino.h>
 
 int pinFL = 52;
-int isObsFL = HIGH;
+int isObsFL = HIGH;                                                                       
 int pinFR = 26;
 int isObsFR = HIGH;
 int pinFM = 53;
 int isObsFM = HIGH;
-int pinBL = 51;
+int pinBL = 50;
 int isObsBL = HIGH;
-int pinBR = 31;
+int pinBR = 28;
 int isObsBR = HIGH;
 int pinBM = 33;
 int isObsBM = HIGH;

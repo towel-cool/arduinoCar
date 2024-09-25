@@ -35,6 +35,11 @@ void loop(){
   if (isOn) {
     checkIR();
     move();
+    // int* sensorArray = checkGround();
+    // for (int i = 0; i < 6; i++){
+    //   Serial.print(sensorArray[i]);
+    // }
+    // Serial.println();
   }
   else {
     brake();
