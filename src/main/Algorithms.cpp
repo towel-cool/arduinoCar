@@ -12,6 +12,8 @@ bool availableFunctions[4] = {true, true, true, true};
 int* sensorArray;
 int lastIR[6] = {0, 0, 0, 0, 0, 0};
 
+int functionCounter = 0;
+
 Stack<int> possibleFunctions;
 
 void move(){
@@ -19,11 +21,12 @@ void move(){
   // randomly pick
   // based
 
-  //Serial.print("Available Functions: ");
+  Serial.print("Available Functions: ");
   for (int i = 0; i < 4; i++){
-    //Serial.print(availableFunctions[i]);
-  //Serial.println(" ");
+    Serial.print(availableFunctions[i]);
+  Serial.println(" ");
   }
+
   for (int i = 0; i < 4; i++) {
     if (availableFunctions[i] == true)
       possibleFunctions.push(i);
@@ -39,9 +42,26 @@ void move(){
   int chosenIndex = (rand() % (possibleFunctions.length()));
   int chosenFunctionIndex = possibleFunctions.get(chosenIndex);
 
-  if (possibleFunctions.length() > 0) {
-      previousFunctionIndex = chosenFunctionIndex;
+  if (chosenFunctionIndex == previousFunctionIndex) {
+    functionCounter += 1;
+  }
+  else {
+    functionCounter = 0;
+  }
 
+  Serial.print("function counter");
+  Serial.println(functionCounter);
+  Serial.print("possible functions length");
+  Serial.println(possibleFunctions.length());
+
+  if (functionCounter > 30 && chosenFunctionIndex != 1) {
+    chosenFunctionIndex = 0;
+  }
+  else {
+    previousFunctionIndex = chosenFunctionIndex;
+  }
+
+  if (possibleFunctions.length() > 0) {
       //Serial.print("Chosen Function: ");
       //Serial.println(chosenFunctionIndex);
 
@@ -64,10 +84,9 @@ void move(){
           break;
         default:
           break;
+      }
     }
-  }
-  
-  possibleFunctions.clear();
+    possibleFunctions.clear();
 }
 
 void checkIR(){
@@ -83,15 +102,15 @@ void checkIR(){
 }
   int* sensorArray = checkGround();
 
-  Serial.print("Sensor array: ");
+  //Serial.print("Sensor array: ");
   for (int i = 0; i < 6; i++) {
-    Serial.print(sensorArray[i]);
+    //Serial.print(sensorArray[i]);
   }
-  Serial.print(" -> ");
+  //Serial.print(" -> ");
   for (int i = 0; i < 6; i++) {
-    Serial.print(lastIR[i]);
+    //Serial.print(lastIR[i]);
   }
-  Serial.println(" ");
+  //Serial.println(" ");
 
   if (sensorArray[0] == lastIR[0] && sensorArray[1] == lastIR[1] && sensorArray[2] == lastIR[2] && sensorArray[3] == lastIR[3] && sensorArray[4] == lastIR[4] && sensorArray[5] == lastIR[5]){
     //if nothings changed do same
