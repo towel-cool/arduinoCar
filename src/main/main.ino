@@ -1,6 +1,7 @@
 #include "Motor.h"
 #include "IRSensor.h"
 #include "Algorithms.h"
+#include "ObjectDetect.h"
 
 const int buttonPin = 22;
 int buttonState = 0;
@@ -26,6 +27,7 @@ void setup(){
   pinMode(buttonPin, INPUT);
   setSpeed();
   setupIR();
+  setupObjectSensors();
 }
 
 
@@ -34,6 +36,7 @@ void loop(){
 
   if (isOn) {
     checkIR();
+    checkObjects();
     move();
     // int* sensorArray = checkGround();
     // for (int i = 0; i < 6; i++){
