@@ -33,11 +33,11 @@ void move(){
       possibleFunctions.push(i);
   }
 
-  //Serial.print("Possible Functions");
-  for (int i = 0; i < 4; i++){
-    //Serial.print(possibleFunctions.get(i));
-  //Serial.println(" ");
-  }
+  // Serial.print("Possible Functions");
+  // for (int i = 0; i < 4; i++){
+  //   Serial.print(possibleFunctions.get(i));
+  // Serial.println(" ");
+  // }
   //Serial.print("Possible Functions Length: ");
   //Serial.println(possibleFunctions.length());
   int chosenIndex = (rand() % (possibleFunctions.length()));
@@ -55,7 +55,7 @@ void move(){
   // Serial.print("possible functions length");
   // Serial.println(possibleFunctions.length());
 
-  if (functionCounter > 10 && chosenFunctionIndex != 1) {
+  if (functionCounter > 5 && chosenFunctionIndex != 1) {
     chosenFunctionIndex = 0;
   }
   else {
@@ -69,19 +69,19 @@ void move(){
       switch(chosenFunctionIndex) {
         case 0: 
           forward();
-          // Serial.println("forward");
+          Serial.println("forward");
           break;
         case 1:
           backward();
-          // Serial.println("backward");
+          Serial.println("backward");
           break;
         case 2:
           swivelLeft();
-          // Serial.println("left swivel");
+          Serial.println("left swivel");
           break;
         case 3:
           swivelRight();
-          // Serial.println("right swivel");
+          Serial.println("right swivel");
           break;
         default:
           break;
@@ -91,37 +91,21 @@ void move(){
 }
 
 void checkObjects() {
-  checkSurroundings();
-  // int (*sensorArray)[4] = checkSurroundings();
+  int* sensorArray = checkSurroundings();
 
-  // for (int i = 0; i < 2; i++) {
-  //   for (int j = 0; j < 4; i++) {
-  //     Serial.print(sensorArray[i][j]);
-  //   }
-  // }
+  for (int i = 0; i < 4; i++) {
+    Serial.print(sensorArray[i]);
+    Serial.print(" ");
+  }
 
-  // Serial.println(" ");
+  Serial.println(" ");
 
-  // if (sensorArray[0][0] == 0 || sensorArray[0][1] == 0) {
-  //   availableFunctions[0] = false;
-  //   availableFunctions[2] = false;
-  //   availableFunctions[3] = false;
-  // }
-  // if (sensorArray[0][2] == 0 || sensorArray[0][3] == 0) {
-  //   availableFunctions[1] = false;
-  //   availableFunctions[2] = false;
-  //   availableFunctions[3] = false;
-  // }
-  // if (sensorArray[1][0] < 5 || sensorArray[1][1] < 5) {
-  //   availableFunctions[0] = false;
-  //   availableFunctions[2] = false;
-  //   availableFunctions[3] = false;
-  // }
-  // if (sensorArray[1][2] < 5 || sensorArray[1][3] < 5) {
-  //   availableFunctions[1] = false;
-  //   availableFunctions[2] = false;
-  //   availableFunctions[3] = false;
-  // }
+  if (sensorArray[0] < 15 || sensorArray[1] == 1 || sensorArray[2] == 1) {
+    availableFunctions[0] = false;
+    availableFunctions[1] = true;
+    availableFunctions[2] = false;
+    availableFunctions[3] = false;
+  }
 }
 
 void checkIR(){

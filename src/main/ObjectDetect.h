@@ -1,2 +1,2 @@
 void setupObjectSensors();
-int (*checkSurroundings())[4];
+int* checkSurroundings();
