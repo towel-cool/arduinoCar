@@ -1,67 +1,71 @@
 #include <Arduino.h>
 #include <ezButton.h>
 
-ezButton btnLeft(41);
-ezButton btnRight(39);
+ezButton leftSwitch(48);
+ezButton rightSwitch(42);
 
-// Front Left Sensors
-// const int ir_pin_fl = 53;
-// int is_obs_fl_ir = HIGH;
-const int trig_Pin_FL = 38;
-const int echo_Pin_FL = 40;
+const int trig_Pin_FL = 44;
+const int echo_Pin_FL = 38;
 
-// Front Right Sensors
-// const int ir_pin_fr = 36;
-// // int is_obs_fr_ir = HIGH;
-// const int trig_Pin_FR = 46;
-// const int echo_Pin_FR = 48;
+const int trig_Pin_FR = 32;
+const int echo_Pin_FR = 34;
 
-// // Back Left Sensors
-// // const int ir_pin_bl = 43;
-// // int is_obs_bl_ir = HIGH;
-// const int trig_Pin_BL = 42;
-// const int echo_Pin_BL = 44;
+int threshold = 20;
 
-// // Back Right Sensors
-// // const int ir_pin_br = 32;
-// // int is_obs_br_ir = HIGH;
-// const int trig_Pin_BR = 37;
-// const int echo_Pin_BR = 33;
+int durationfl, durationfr, distfl, distfr;
 
-int durationbl, durationbr, durationfl, durationfr;
+int leftSwitchState, rightSwitchState;
 
-int res2[4] = {9999,9999,9999};
+int res2[4] = {9999,9999,9999,9999};
 
 void setupObjectSensors() {
-    // pinMode(ir_pin_fl, INPUT);
-    // pinMode(ir_pin_fr, INPUT);
-    // pinMode(ir_pin_bl, INPUT);
-    // pinMode(ir_pin_br, INPUT);
-
     pinMode(trig_Pin_FL, OUTPUT);
     pinMode(echo_Pin_FL, INPUT);
 
-    // pinMode(trig_Pin_FR, OUTPUT);
-    // pinMode(echo_Pin_FR, INPUT);
+    pinMode(trig_Pin_FR, OUTPUT);
+    pinMode(echo_Pin_FR, INPUT);
 
-    // pinMode(trig_Pin_BL, OUTPUT);
-    // pinMode(echo_Pin_BL, INPUT);
-
-    // pinMode(trig_Pin_BR, OUTPUT);
-    // pinMode(echo_Pin_BR, INPUT);
+    rightSwitch.setDebounceTime(50);
+    leftSwitch.setDebounceTime(50);
 }
 
 int* checkSurroundings() {
-  // Front Left Sensor
     digitalWrite(trig_Pin_FL, LOW);
+    delayMicroseconds(2);
     digitalWrite(trig_Pin_FL, HIGH);
+    delayMicroseconds(10);
     digitalWrite(trig_Pin_FL, LOW);
     durationfl = pulseIn(echo_Pin_FL, HIGH, 30000);
-    res2[0] = durationfl > 0 ? (durationfl * 0.0343) / 2 : 9999;
+    distfl = durationfl > 0 ? (durationfl * 0.0343) / 2 : 9999;   
 
-    res2[1] = btnLeft.getState();
-    res2[2] = btnLeft.getState();   
+    digitalWrite(trig_Pin_FR, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trig_Pin_FR, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trig_Pin_FR, LOW);
+    durationfr = pulseIn(echo_Pin_FR, HIGH, 30000);
+    distfr = durationfr > 0 ? (durationfr * 0.0343) / 2 : 9999;
 
+    if (distfl <= threshold) {
+      res2[0] = 0;
+    } else {
+      res2[0] = 1;
+    }
+
+    if (distfr <= threshold) {
+      res2[1] = 0;
+    } else {
+      res2[1] = 1;
+    }
+
+    rightSwitch.loop();
+    leftSwitch.loop();
+
+    int leftSwitchState = leftSwitch.getState();
+    int rightSwitchState = rightSwitch.getState();
+
+    res2[2] = leftSwitchState;
+    res2[3] = rightSwitchState;
 
     return res2;
 }

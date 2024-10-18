@@ -1,3 +1,2 @@
-void checkIR();
-void checkObjects();
+void setSensorArray();
 void move();
