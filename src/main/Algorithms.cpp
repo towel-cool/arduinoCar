@@ -30,9 +30,20 @@ void setSensorArray() {
   for (int i = 4; i < 8; i++) {
     sensorArray[i] = Obj_Det_Array[i-4];
   }
+
+  //Print the sensor array
+  for (int i = 0; i < 8; i++){
+    Serial.print(sensorArray[i]);
+    Serial.print(" ");
+  }
+  Serial.print("\n");
 }
 
 void move(){
+    for (int i = 0; i < 4; i++) {
+      availableFunctions[i] = true;
+    }
+
     // IR sensors
     if (sensorArray[0] == 1){
       availableFunctions[0] = false; // cant go forward
@@ -77,18 +88,19 @@ void move(){
     }
     Serial.println("\n");
 
-    for (int i = 0; i < 4; i++) {
-      if (availableFunctions[i] == true) {
-        possibleFunctions.push(i);
-      }
-    }
-
+    // this needs to be done before we push the available functions on the stack
     if (sensorArray[0] == lastSensorArray[0] && sensorArray[1] == lastSensorArray[1] && sensorArray[2] == lastSensorArray[2] && sensorArray[3] == lastSensorArray[3] && sensorArray[4] == lastSensorArray[4] && sensorArray[5] == lastSensorArray[5] && sensorArray[6] == lastSensorArray[6] && sensorArray[7] == lastSensorArray[7]) {
       //if nothings changed do same
       for (int i = 0; i < 4; i++) {
         availableFunctions[i] = false;
       }
       availableFunctions[previousFunctionIndex] = true;
+    }
+
+    for (int i = 0; i < 4; i++) {
+      if (availableFunctions[i] == true) {
+        possibleFunctions.push(i);
+      }
     }
 
     int chosenIndex = (rand() % (possibleFunctions.length()));
@@ -100,7 +112,7 @@ void move(){
       functionCounter = 0;
     }
 
-    if (functionCounter > 5 && chosenFunctionIndex != 1) {
+    if (functionCounter > 20 && chosenFunctionIndex != 1) {
       chosenFunctionIndex = 0;
     } else {
       previousFunctionIndex = chosenFunctionIndex;
