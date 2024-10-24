@@ -8,8 +8,8 @@
 bool availableFunctions[4] = {true, true, true, true};
 //[forward, backwards, leftSwivel, rightSwivel]
 
-int lastSensorArray[8] = {0,0,0,0,0,0,0,0};
-int sensorArray[8] = {0,0,0,0,0,0,0,0};
+int lastSensorArray[10] = {0,0,0,0,0,0,0,1,1,1};
+int sensorArray[10] = {0,0,0,0,0,0,0,1,1,1};
 // 0 to 3 = ir sensors
 // 4 to 7 = ultrasonics and switches
 // order goes front left, front right, back left, back right
@@ -27,12 +27,12 @@ void setSensorArray() {
   for (int i = 0; i < 4; i++) {
     sensorArray[i] = IR_array[i];
   }
-  for (int i = 4; i < 8; i++) {
+  for (int i = 4; i < 10; i++) {
     sensorArray[i] = Obj_Det_Array[i-4];
   }
 
   //Print the sensor array
-  for (int i = 0; i < 8; i++){
+  for (int i = 0; i < 10; i++){
     Serial.print(sensorArray[i]);
     Serial.print(" ");
   }
@@ -47,41 +47,59 @@ void move(){
     // IR sensors
     if (sensorArray[0] == 1){
       availableFunctions[0] = false; // cant go forward
-      availableFunctions[3] = false; // cant leftSwivel
+      availableFunctions[2] = false;
+      availableFunctions[3] = false;
     } 
     if (sensorArray[1] == 1){
       availableFunctions[0] = false; 
-      availableFunctions[2] = false; //cant right swivel 
+      availableFunctions[2] = false;
+      availableFunctions[3] = false;
     }
     if (sensorArray[2] == 1){
       availableFunctions[1] = false; //cant backwards
       availableFunctions[2] = false; //cant swivel left
+      availableFunctions[3] = false;
     }
     if (sensorArray[3] == 1){
       availableFunctions[1] = false; //cant backwards
+      availableFunctions[2] = false;
       availableFunctions[3] = false; //cant swivel right
     }
     
     // Ultrasonic Sensors
     if (sensorArray[4] == 0){
       availableFunctions[0] = false;
-      availableFunctions[3] = false;
+      availableFunctions[1] = false;
+      availableFunctions[2] = false;
     } 
     if (sensorArray[5] == 0){
       availableFunctions[0] = false;
-      availableFunctions[2] = false;
+      availableFunctions[1] = false;
+      availableFunctions[3] = false;
+    }
+    if (sensorArray[6] == 0){
+      availableFunctions[0] = false;
+      availableFunctions[1] = false;
     }
 
     // Switches
-    if (sensorArray[6] == 0){
-      availableFunctions[0] = false;
-      availableFunctions[2] = false;
-    }
     if (sensorArray[7] == 0){
       availableFunctions[0] = false;
+      availableFunctions[2] = false;
+      availableFunctions[3] = false;
+    }
+    if (sensorArray[8] == 0){
+      availableFunctions[0] = false;
+      availableFunctions[2] = false;
+      availableFunctions[3] = false;
+    }
+    if (sensorArray[9] == 0){
+      availableFunctions[0] = false;
+      availableFunctions[2] = false;
       availableFunctions[3] = false;
     }
 
+    //printing available functions
     for (int i = 0; i < 4; i++) {
       Serial.print(availableFunctions[i]);
       Serial.print(" ");
@@ -90,11 +108,13 @@ void move(){
 
     // this needs to be done before we push the available functions on the stack
     if (sensorArray[0] == lastSensorArray[0] && sensorArray[1] == lastSensorArray[1] && sensorArray[2] == lastSensorArray[2] && sensorArray[3] == lastSensorArray[3] && sensorArray[4] == lastSensorArray[4] && sensorArray[5] == lastSensorArray[5] && sensorArray[6] == lastSensorArray[6] && sensorArray[7] == lastSensorArray[7]) {
+      if (availableFunctions[previousFunctionIndex] == true){
       //if nothings changed do same
       for (int i = 0; i < 4; i++) {
         availableFunctions[i] = false;
       }
       availableFunctions[previousFunctionIndex] = true;
+      }
     }
 
     for (int i = 0; i < 4; i++) {
@@ -112,7 +132,7 @@ void move(){
       functionCounter = 0;
     }
 
-    if (functionCounter > 20 && chosenFunctionIndex != 1) {
+    if (functionCounter > 25 && sensorArray[0] == 0 && sensorArray[1] == 0 && sensorArray[4] == 1 && sensorArray[5] == 1 && sensorArray[6] == 1 && sensorArray[7] == 1) {
       chosenFunctionIndex = 0;
     } else {
       previousFunctionIndex = chosenFunctionIndex;

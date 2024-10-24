@@ -3,6 +3,7 @@
 
 ezButton leftSwitch(48);
 ezButton rightSwitch(42);
+ezButton middleSwitch(33);
 
 const int trig_Pin_FL = 44;
 const int echo_Pin_FL = 38;
@@ -10,13 +11,16 @@ const int echo_Pin_FL = 38;
 const int trig_Pin_FR = 32;
 const int echo_Pin_FR = 34;
 
-int threshold = 20;
+const int trig_Pin_M = 36;
+const int echo_Pin_M = 46;
 
-int durationfl, durationfr, distfl, distfr;
+int threshold = 15;
+
+int durationfl, durationfr, durationm, distfl, distfr, distm;
 
 int leftSwitchState, rightSwitchState;
 
-int res2[4] = {9999,9999,9999,9999};
+int res2[6] = {9999,9999,9999,9999,9999,9999};
 
 void setupObjectSensors() {
     pinMode(trig_Pin_FL, OUTPUT);
@@ -24,6 +28,9 @@ void setupObjectSensors() {
 
     pinMode(trig_Pin_FR, OUTPUT);
     pinMode(echo_Pin_FR, INPUT);
+
+    pinMode(trig_Pin_M, OUTPUT);
+    pinMode(echo_Pin_M, INPUT);
 
     rightSwitch.setDebounceTime(50);
     leftSwitch.setDebounceTime(50);
@@ -46,6 +53,14 @@ int* checkSurroundings() {
     durationfr = pulseIn(echo_Pin_FR, HIGH, 30000);
     distfr = durationfr > 0 ? (durationfr * 0.0343) / 2 : 9999;
 
+    digitalWrite(trig_Pin_M, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trig_Pin_M, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trig_Pin_M, LOW);
+    durationm = pulseIn(echo_Pin_M, HIGH, 30000);
+    distm = durationm > 0 ? (durationm * 0.0343) / 2 : 9999;
+
     if (distfl <= threshold) {
       res2[0] = 0;
     } else {
@@ -58,14 +73,33 @@ int* checkSurroundings() {
       res2[1] = 1;
     }
 
+    if (distm <= threshold) {
+      res2[2] = 0;
+    } else {
+      res2[2] = 1;
+    }
+
+    //print ultrasonic distances
+    // Serial.print(distfl);
+    // Serial.print(" ");
+    // Serial.print(distfr);
+    // Serial.print(" ");
+    // Serial.print(distfr);
+    // Serial.print(" ");
+    // Serial.print(distm);
+    // Serial.println(" ");
+
     rightSwitch.loop();
     leftSwitch.loop();
+    middleSwitch.loop();
 
     int leftSwitchState = leftSwitch.getState();
     int rightSwitchState = rightSwitch.getState();
+    int middleSwitchState = middleSwitch.getState();
 
-    res2[2] = leftSwitchState;
-    res2[3] = rightSwitchState;
+    res2[3] = leftSwitchState;
+    res2[4] = rightSwitchState;
+    res2[5] = middleSwitchState;
 
     return res2;
 }
