@@ -28,6 +28,7 @@ void setup(){
   setSpeed();
   setupIR();
   setupObjectSensors();
+  setTrackingSensors();
 }
 
 

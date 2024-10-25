@@ -4,25 +4,26 @@
 #include "ObjectDetect.h"
 #include <stdlib.h>
 #include "Stack.h"
-
-bool availableFunctions[4] = {true, true, true, true};
-//[forward, backwards, leftSwivel, rightSwivel]
+#include "lineTrackingSensors.h"
 
 int lastSensorArray[10] = {0,0,0,0,0,0,0,1,1,1};
 int sensorArray[10] = {0,0,0,0,0,0,0,1,1,1};
+int* trackingArray[3];
 // 0 to 3 = ir sensors
-// 4 to 7 = ultrasonics and switches
-// order goes front left, front right, back left, back right
+// 4 to 9 = ultrasonics and switches
+// order goes front left, front right, back left, back right for ir sensors
+// order goes front left, front right, center for ultrasonics and switches
 // 0 = object, 1 = no object
 
-int previousFunctionIndex = 0;
-int functionCounter = 0;
+// Can we go forward variable
+int sensorsGood = 0;
 
-Stack<int> possibleFunctions;
+bool isTracking = false;
 
 void setSensorArray() {
   int* IR_array = checkGround();
   int* Obj_Det_Array = checkSurroundings();
+  trackingArray = getTrackingArray();
 
   for (int i = 0; i < 4; i++) {
     sensorArray[i] = IR_array[i];
@@ -32,137 +33,124 @@ void setSensorArray() {
   }
 
   //Print the sensor array
-  for (int i = 0; i < 10; i++){
-    Serial.print(sensorArray[i]);
-    Serial.print(" ");
-  }
-  Serial.print("\n");
+  // for (int i = 0; i < 10; i++){
+  //   Serial.print(sensorArray[i]);
+  //   Serial.print(" ");
+  // }
+  // Serial.print("\n");
 }
 
 void move(){
-    for (int i = 0; i < 4; i++) {
-      availableFunctions[i] = true;
+    if (!isTracking) {
+      // searching state
+      for (int i = 0; i < 10; i++)
+      {
+        if (i < 2 && sensorArray[i] == 0) {
+          sensorsGood += 1;
+        }  
+        else if (i >= 4 && sensorArray[i] == 1) {
+          sensorsGood += 1;
+        }
+      }
+      // we can go forward if the front IRs and all the object sensors are good
+      if (sensorsGood == 8) {
+        forward();
+        sensorsGood = 0;
+      } 
+
+    } else if (isTracking) {
+      // line tracking state
+      if (trackingArray[0] == 1 && trackingArray[1] == 1)
+      {
+        swivelRight();
+        delay(50);  
+      }
+
+      // GO FORWARD
+      forward();
+
+      if (trackingArray[2] == 1) {
+        // move forward when the middle sensors detects line
+        // check middle if line ends
+        forward();
+      }
+
+      if (trackingArray[0] == 1) {
+        // swivel left
+        while (trackingArray[2] != 1) {
+          swivelRight(); // TEST THIS SPEED, MAKE NEW FUNCTION IF NEEDED
+        }
+        // brake(); if needed
+      }
+
+      if (trackingArray[1] == 1) {
+        // swivel right
+        while (trackingArray[2] != 1) {
+          swivelLeft(); // TEST THIS SPEED, MAKE NEW FUNCTION IF NEEDED
+        }
+        // brake(); if needed
+      }
+
+    }
+    
+    // Line Tracker
+    if (trackingArray[0] == 0 || trackingArray[1] == 0) {
+      // checks if the robot detects a line
+      isTracking = true;
     }
 
     // IR sensors
-    if (sensorArray[0] == 1){
-      availableFunctions[0] = false; // cant go forward
-      availableFunctions[2] = false;
-      availableFunctions[3] = false;
+    if (sensorArray[0] == 1 || sensorArray[1] == 1){
+      // case where either of the front two ir sensors don't detect anything
+      // reverse for a bit, until the sensors are detecting the table again
+      backward();
+      delay(50);
+
+      // then swivel at a random angle
+      swivelRight();
+      delay((rand() % 200) + 50);
+      
+      // TURNS OFF TRACKING MODE
+      isTracking = false;
+      
     } 
-    if (sensorArray[1] == 1){
-      availableFunctions[0] = false; 
-      availableFunctions[2] = false;
-      availableFunctions[3] = false;
-    }
-    if (sensorArray[2] == 1){
-      availableFunctions[1] = false; //cant backwards
-      availableFunctions[2] = false; //cant swivel left
-      availableFunctions[3] = false;
-    }
-    if (sensorArray[3] == 1){
-      availableFunctions[1] = false; //cant backwards
-      availableFunctions[2] = false;
-      availableFunctions[3] = false; //cant swivel right
+    if (sensorArray[2] == 1 || sensorArray[3] == 1) {
+      // case where either of the back two ir sensors don't detect anything
+      // brake
+      brake();
+
+      // go forward a bit
+      forward();
+      delay(50);
     }
     
     // Ultrasonic Sensors
-    if (sensorArray[4] == 0){
-      availableFunctions[0] = false;
-      availableFunctions[1] = false;
-      availableFunctions[2] = false;
-    } 
-    if (sensorArray[5] == 0){
-      availableFunctions[0] = false;
-      availableFunctions[1] = false;
-      availableFunctions[3] = false;
-    }
-    if (sensorArray[6] == 0){
-      availableFunctions[0] = false;
-      availableFunctions[1] = false;
+    if (sensorArray[4] == 0 || sensorArray[5] == 0 || sensorArray[6] == 0) {
+      // case where the ultrasonic sensors detect an object infront
+      // brake
+      brake();
+      
+      //then swivel at a random angle
+      swivelRight();
+      delay((rand() % 200) + 50);
+
+
+      // TURNS OFF TRACKING MODE
+      isTracking = false;
     }
 
     // Switches
-    if (sensorArray[7] == 0){
-      availableFunctions[0] = false;
-      availableFunctions[2] = false;
-      availableFunctions[3] = false;
-    }
-    if (sensorArray[8] == 0){
-      availableFunctions[0] = false;
-      availableFunctions[2] = false;
-      availableFunctions[3] = false;
-    }
-    if (sensorArray[9] == 0){
-      availableFunctions[0] = false;
-      availableFunctions[2] = false;
-      availableFunctions[3] = false;
-    }
+    if (sensorArray[7] == 0 || sensorArray[8] == 0 || sensorArray[9] == 0) {
+      // case where the front switches detect an object infront
+      // reverse (enough to make sure we dont hit anything), then swivel at a random angle
+      backward();
+      delay(200);   // TEST THIS NUMBER
+      
+      //then swivel at a random angle
+      swivelRight();
+      delay((rand() % 200) + 50);
 
-    //printing available functions
-    for (int i = 0; i < 4; i++) {
-      Serial.print(availableFunctions[i]);
-      Serial.print(" ");
-    }
-    Serial.println("\n");
-
-    // this needs to be done before we push the available functions on the stack
-    if (sensorArray[0] == lastSensorArray[0] && sensorArray[1] == lastSensorArray[1] && sensorArray[2] == lastSensorArray[2] && sensorArray[3] == lastSensorArray[3] && sensorArray[4] == lastSensorArray[4] && sensorArray[5] == lastSensorArray[5] && sensorArray[6] == lastSensorArray[6] && sensorArray[7] == lastSensorArray[7]) {
-      if (availableFunctions[previousFunctionIndex] == true){
-      //if nothings changed do same
-      for (int i = 0; i < 4; i++) {
-        availableFunctions[i] = false;
-      }
-      availableFunctions[previousFunctionIndex] = true;
-      }
-    }
-
-    for (int i = 0; i < 4; i++) {
-      if (availableFunctions[i] == true) {
-        possibleFunctions.push(i);
-      }
-    }
-
-    int chosenIndex = (rand() % (possibleFunctions.length()));
-    int chosenFunctionIndex = possibleFunctions.get(chosenIndex);
-
-    if (chosenFunctionIndex == previousFunctionIndex) {
-      functionCounter += 1;
-    } else {
-      functionCounter = 0;
-    }
-
-    if (functionCounter > 25 && sensorArray[0] == 0 && sensorArray[1] == 0 && sensorArray[4] == 1 && sensorArray[5] == 1 && sensorArray[6] == 1 && sensorArray[7] == 1) {
-      chosenFunctionIndex = 0;
-    } else {
-      previousFunctionIndex = chosenFunctionIndex;
-    }
-
-    if (possibleFunctions.length() > 0) {
-      switch (chosenFunctionIndex) {
-        case 0:
-          forward();
-          Serial.println("forward");
-          break;
-        case 1:
-          backward();
-          Serial.println("backward");
-          break;
-        case 2:
-          swivelLeft();
-          Serial.println("left swivel");
-          break;
-        case 3:
-          swivelRight();
-          Serial.println("right swivel");
-          break;
-        default:
-          break;
-      }
-    }
-    possibleFunctions.clear();
-
-    for (int i = 0; i < 8; i++) {
-      lastSensorArray[i] = sensorArray[i];
+      // TURNS OFF TRACKING MODE
+      isTracking = false;
     }
 }

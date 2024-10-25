@@ -1,0 +1,2 @@
+void setTrackingSensors();
+int* getTrackingArray();
