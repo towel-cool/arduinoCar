@@ -2,8 +2,9 @@
 #include "IRSensor.h"
 #include "Algorithms.h"
 #include "ObjectDetect.h"
+#include "lineTrackingSensors.h"
 
-const int buttonPin = 22;
+const int buttonPin = 49;
 int buttonState = 0;
 bool isOn = false; 
 
@@ -29,6 +30,7 @@ void setup(){
   setupIR();
   setupObjectSensors();
   setTrackingSensors();
+  setThings();
 }
 
 

@@ -1,10 +1,10 @@
 #include <Arduino.h>
 
-int pinL = 0;
+int pinL = 40;
 int isObsL = HIGH;                                                                       
-int pinR = 0;
+int pinR = 43;
 int isObsR = HIGH;
-int pinM = 0;
+int pinM = 41;
 int isObsM = HIGH;
 
 int res3[3] = {0,0,0};
@@ -37,6 +37,9 @@ int* getTrackingArray() {
     {
         res3[2] = 1;
     }
+
+    // Serial.print(isObsL); Serial.print(" "); Serial.print(isObsR); Serial.print(" "); Serial.print(isObsM);
+    // Serial.println(" ");
 
     return res3;
 }

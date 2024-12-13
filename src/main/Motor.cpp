@@ -7,13 +7,7 @@ AF_DCMotor motor3(3);
 AF_DCMotor motor4(4);
 
 // We move too fast. Trying 80 instead of 100.
-const int DEFAULT_SPEED = 80;
-
-// Per Wheel Speed Equalization
-const int FL_OFFSET = 0;
-const int FR_OFFSET = 0;
-const int BL_OFFSET = 0;
-const int BR_OFFSET = 0;
+const int DEFAULT_SPEED = 100;
 
 AF_DCMotor& leftFront = motor2;
 AF_DCMotor& leftBack = motor3;
@@ -21,20 +15,20 @@ AF_DCMotor& rightFront = motor1;
 AF_DCMotor& rightBack = motor4;
 
 void setSpeed(int speed = DEFAULT_SPEED) {
-  leftFront.setSpeed(speed + FL_OFFSET);
-  leftBack.setSpeed(speed + BL_OFFSET);
-  rightFront.setSpeed(speed + FR_OFFSET);
-  rightBack.setSpeed(speed + BR_OFFSET);
+  leftFront.setSpeed(speed + 45);
+  leftBack.setSpeed(speed + 20);
+  rightFront.setSpeed(speed + 15);
+  rightBack.setSpeed(speed + 40);
 }
 
 void setLeftSpeed(int x){
-  leftFront.setSpeed(speed + FL_OFFSET);
-  leftBack.setSpeed(speed + BL_OFFSET);
+  leftFront.setSpeed(x);
+  leftBack.setSpeed(x);
 }
 
 void setRightSpeed(int x){
-  rightFront.setSpeed(speed + FR_OFFSET);
-  rightBack.setSpeed(speed + BR_OFFSET);
+  rightFront.setSpeed(x);
+  rightBack.setSpeed(x);
 }
 
 void brake() {
@@ -102,8 +96,10 @@ void swivelStop(){
 
 // Had an offset of 20 before
 void swivelLeft() {
-  setLeftSpeed(80);
-  setRightSpeed(80);
+  leftFront.setSpeed(160 + 65);
+  leftBack.setSpeed(160 + 80);
+  rightFront.setSpeed(160 + 30);
+  rightBack.setSpeed(160 + 40);
   leftBackward();
   rightForward();
   
@@ -111,8 +107,10 @@ void swivelLeft() {
 
 // Had an offset of 20 before
 void swivelRight() {
-  setLeftSpeed(80);
-  setRightSpeed(80);
+  leftFront.setSpeed(160);
+  leftBack.setSpeed(250);
+  rightFront.setSpeed(160);
+  rightBack.setSpeed(160);
   leftForward();
   rightBackward();
 }
